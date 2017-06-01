@@ -15,7 +15,7 @@ class City < ActiveRecord::Base
    
     City.all.each do |city|
       city_ratios[city.id] = city.listings.collect{|l| l.reservations.size}.sum.to_f
-      (city_ratios[city.id]/city.listings.size) unless city.listings.size == 0
+      (city_ratios[city.id]/city.listings.size) unless city.listings.empty?
     end
     
     City.find(city_ratios.max_by{|city_id, ratio| ratio}[0])
@@ -28,7 +28,7 @@ class City < ActiveRecord::Base
       cities_reservations[city] = city.listings.collect{|listing| listing.reservations.size}.reduce(0, :+)
     end
     
-    cities_reservations.max_by{|k,v| v}.first
+    cities_reservations.max_by{|city_id,reservations_count| reservations_count}.first
   end
 
 end
