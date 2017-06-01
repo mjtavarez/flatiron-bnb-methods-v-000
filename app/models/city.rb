@@ -11,9 +11,14 @@ class City < ActiveRecord::Base
   end
   
   def self.highest_ratio_res_to_listings
-    City.where(reservations)
-    # City.where(:total_reservations / city.listings.size)
-    City.minimum(:total_reservations)
+    city_ratios = {}
+   
+    City.all.each do |city|
+      city_ratios[city.id] = city.listings.collect{|l| l.reservations.size}.sum.to_f
+      (city_ratios[city.id]/city.listings.size) unless city.listings.size == 0
+    end
+    
+    City.find(city_ratios.max_by{|city_id, ratio| ratio}[0])
   end
   
   def self.most_res
@@ -25,9 +30,6 @@ class City < ActiveRecord::Base
     
     cities_reservations.max_by{|k,v| v}.first
   end
-  
-  # def total_reservations
-  #   listings.collect{|l| l.reservations.size}.reduce(0, :+)
-  # end
+
 end
 
