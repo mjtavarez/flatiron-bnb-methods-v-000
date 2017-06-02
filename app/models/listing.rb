@@ -23,7 +23,7 @@ class Listing < ActiveRecord::Base
     end
     
     def update_host_status
-      if Listing.where(host_id: self.host_id).empty?
+      if Listing.where(host_id: self.host_id).where(host_id: self.host_id).empty?
         User.find(self.host_id).update(host: false)
       end
     end
